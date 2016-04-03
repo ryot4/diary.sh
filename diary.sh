@@ -29,8 +29,8 @@ if [ -z ${DIARY_PREFIX} ]; then
 	DIARY_PREFIX=${HOME}/diary
 fi
 
-year=$(LC_TIME=C date +'%Y')
-month=$(LC_TIME=C date +'%m')
+year=$(date +'%Y')
+month=$(date +'%m')
 month_without_leading_zero=${month#0}
 
 diary_file=${DIARY_PREFIX}/${year}/${month}

@@ -32,7 +32,6 @@ fi
 year=$(LC_TIME=C date +'%Y')
 month=$(LC_TIME=C date +'%m')
 month_without_leading_zero=${month#0}
-day_without_leading_zero=$(LC_TIME=C date +'%-d')
 
 diary_file=${DIARY_PREFIX}/${year}/${month}
 
@@ -45,7 +44,7 @@ if [ ! -f ${diary_file} ]; then
 fi
 
 # write the header for the day if it does not exist
-header="## ${month_without_leading_zero}/${day_without_leading_zero}"
+header="## ${month_without_leading_zero}/$(date +'%-d (%a)')"
 if ! grep -F "${header}" ${diary_file} > /dev/null; then
 	printf "\n${header}\n\n\n" >> ${diary_file}
 fi

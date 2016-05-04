@@ -25,7 +25,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-if [ -z ${DIARY_PREFIX} ]; then
+if [ -z "${DIARY_PREFIX}" ]; then
 	DIARY_PREFIX=${HOME}/diary
 fi
 
@@ -39,23 +39,23 @@ edit|'')
 	month=$(date +'%m')
 	month_without_leading_zero=${month#0}
 
-	diary_file=${DIARY_PREFIX}/${year}/${month}
+	diary_file="${DIARY_PREFIX}/${year}/${month}"
 
-	if [ ! -d ${DIARY_PREFIX}/${year} ]; then
-		mkdir -p ${DIARY_PREFIX}/${year}
+	if [ ! -d "${DIARY_PREFIX}/${year}" ]; then
+		mkdir -p "${DIARY_PREFIX}/${year}"
 	fi
 
-	if [ ! -f ${diary_file} ]; then
-		echo "# ${year}/${month_without_leading_zero}" > ${diary_file}
+	if [ ! -f "${diary_file}" ]; then
+		echo "# ${year}/${month_without_leading_zero}" > "${diary_file}"
 	fi
 
 	# write the header for the day if it does not exist
 	header="## ${month_without_leading_zero}/$(date +'%-d (%a)')"
-	if ! grep -F "${header}" ${diary_file} > /dev/null; then
-		printf "\n${header}\n\n\n" >> ${diary_file}
+	if ! grep -F "${header}" "${diary_file}" > /dev/null; then
+		printf '\n%s\n\n\n' "${header}" >> "${diary_file}"
 	fi
 
-	exec ${EDITOR:-vi} ${diary_file}
+	exec "${EDITOR:-vi}" "${diary_file}"
 	;;
 *)
 	echo "unknown command \"$1\""

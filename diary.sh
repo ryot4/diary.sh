@@ -52,7 +52,10 @@ edit|'')
 	# write the header for the day if it does not exist
 	header="## ${month_without_leading_zero}/$(date +'%-d (%a)')"
 	if ! grep -F "${header}" "${diary_file}" > /dev/null; then
-		printf '\n%s\n\n\n' "${header}" >> "${diary_file}"
+		printf '\n%s\n' "${header}" >> "${diary_file}"
+		if [ -n "${DIARY_TEMPLATE}" ]; then
+			cat "${DIARY_TEMPLATE}" >> "${diary_file}"
+		fi
 	fi
 
 	exec "${EDITOR:-vi}" "${diary_file}"

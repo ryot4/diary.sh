@@ -1,6 +1,11 @@
 diary.sh is a shell script to keep a diary.
 
-It automatically creates a file (${DIARY_PREFIX}/<year>/<month>) if it does not
-exist, inserts a header for each day, and opens the file with the text editor
-(specified by the EDITOR environment variable). If DIARY_PREFIX environment
-variable is not set, ~/diary is used.
+ * It automatically creates a file (${DIARY_PREFIX}/<year>/<month>) if it does
+   not exist, inserts a header for each day, and opens the file with the text
+   editor (specified by the EDITOR environment variable). If DIARY_PREFIX
+   environment variable is not set, ~/diary is used.
+
+ * DIARY_TEMPLATE environment variable can be used to specify a template file.
+   If specified, the file is inserted after the header for each day.
+
+ * grep subcommand is available to grep over all diary files.

@@ -25,24 +25,24 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-if [ -z "${DIARY_PREFIX}" ]; then
-	DIARY_PREFIX=${HOME}/diary
+if [ -z "${DIARY_DIR}" ]; then
+	DIARY_DIR=${HOME}/diary
 fi
 
 case $1 in
 grep)
 	shift
-	grep -r "$*" "${DIARY_PREFIX}" | sed "s|^${DIARY_PREFIX}/||"
+	grep -r "$*" "${DIARY_DIR}" | sed "s|^${DIARY_DIR}/||"
 	;;
 edit|'')
 	year=$(date +'%Y')
 	month=$(date +'%m')
 	month_without_leading_zero=${month#0}
 
-	diary_file="${DIARY_PREFIX}/${year}/${month}"
+	diary_file="${DIARY_DIR}/${year}/${month}"
 
-	if [ ! -d "${DIARY_PREFIX}/${year}" ]; then
-		mkdir -p "${DIARY_PREFIX}/${year}"
+	if [ ! -d "${DIARY_DIR}/${year}" ]; then
+		mkdir -p "${DIARY_DIR}/${year}"
 	fi
 
 	if [ ! -f "${diary_file}" ]; then

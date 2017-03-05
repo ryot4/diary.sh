@@ -25,41 +25,62 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-[ -n "$DIARY_DIR" ] || DIARY_DIR="$HOME/diary"
-
-case $1 in
-grep)
-    shift
-    grep -r "$*" "$DIARY_DIR" | sed "s|^$DIARY_DIR/||"
-    ;;
-edit|'')
-    year=$(date +'%Y')
-    month=$(date +'%m')
-    month_without_leading_zero=${month#0}
-
-    diary_file="$DIARY_DIR/$year/$month"
-
-    if [ ! -d "$DIARY_DIR/$year" ]; then
-        mkdir -p "$DIARY_DIR/$year"
+edit()
+{
+    year=$(date +%Y)
+    month=$(date +%m)
+    day=$(date +%d)
+    case "$DIARY_MODE" in
+    day)
+        diary_file="$DIARY_DIR/$year/$month/$day"
+        ;;
+    month)
+        diary_file="$DIARY_DIR/$year/$month"
+        ;;
+    *)
+        echo "unknown mode: \"$DIARY_MODE\""
+        exit 1
+        ;;
+    esac
+    dir="$(dirname "$diary_file")"
+    if [ ! -d "$dir" ]; then
+        mkdir -p "$dir"
     fi
-
-    if [ ! -f "$diary_file" ]; then
-        echo "# $year/$month_without_leading_zero" > "$diary_file"
-    fi
-
-    # write the header for the day if it does not exist
-    header="## $month_without_leading_zero/$(date +'%-d (%a)')"
-    if ! grep -F "$header" "$diary_file" > /dev/null; then
-        printf '\n%s\n' "$header" >> "$diary_file"
-        if [ -n "$DIARY_TEMPLATE" ]; then
-            cat "$DIARY_TEMPLATE" >> "$diary_file"
-        fi
-    fi
-
     exec "${EDITOR:-vi}" "$diary_file"
+}
+
+search()
+{
+    grep -r "$1" "$DIARY_DIR" | sed "s|^$DIARY_DIR/||"
+}
+
+while getopts d:m: opt; do
+    case $opt in
+    d)
+        DIARY_DIR="$OPTARG"
+        ;;
+    m)
+        DIARY_MODE="$OPTARG"
+        ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+[ -n "$DIARY_DIR" ] || DIARY_DIR="$HOME/diary"
+[ -n "$DIARY_MODE" ] || DIARY_MODE=day
+
+cmd="$1"
+shift
+
+case "$cmd" in
+edit|'')
+    edit
+    ;;
+search)
+    search "$*"
     ;;
 *)
-    echo "unknown command \"$1\""
+    echo "unknown command \"$cmd\""
     exit 1
     ;;
 esac
